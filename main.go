@@ -2,45 +2,41 @@ package main
 
 
 import (
-	"fmt"
 	"os"
+	"strconv"
+	"fmt"
 
 )
 
-// func getPids()([]int, error){
-//    entries, err:= os.ReadDir("/proc")
-// 	if err != nil{
-// 		return nil, err
-// 	}
-
-// 	for _, entry:= range entries{
-// 			if entry.IsDir(){
-// 				fmt.Print(entry.Name())
-// 			}
-// 	}
-// }
-
-
-func main(){
-	// pids, err := getPids()
-  // if err != nil{
-	// 	fmt.Println("Error:", err)
-	// 	os.Exit(1)
-	// }
-
-	// fmt.Println(pids)
-
-	  entries, _:= os.ReadDir("/proc")
-	// if err != nil{
-	// 	return nil, err
-	// }
-
+func getPids()([]int, error){
+   entries, err:= os.ReadDir("/proc")
+	if err != nil{
+		return nil, err
+	}
+    
+	var pids []int
 	for _, entry:= range entries{
 			if entry.IsDir(){
-				pid, err := strconv.Atoi(entry.name())
-				if err != nil{
-					
+				pid, err := strconv.Atoi(entry.Name())
+				if err == nil{
+					pids = append(pids, pid)
 				}
 			}
 	}
+	return pids, nil
+}
+
+
+func main(){
+	pids, err := getPids()
+    if err != nil{
+		fmt.Println("Error:", err)
+		os.Exit(1)
+	}
+    fmt.Printf("found %d processes\n\n", len(pids))
+
+	for _, pid := range pids{
+		fmt.Println(pid)
+	}
+
 }
